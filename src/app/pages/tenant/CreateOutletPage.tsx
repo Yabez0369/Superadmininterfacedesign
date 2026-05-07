@@ -23,7 +23,7 @@ export function CreateOutletPage() {
   };
 
   return (
-    <div className="max-w-[1200px]">
+    <div className="w-full max-w-none">
       <Link to="/tenant-admin/outlets" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-4">
         <ArrowLeft className="w-4 h-4" />
         Back to Outlets
@@ -35,7 +35,7 @@ export function CreateOutletPage() {
       </div>
 
       <div className="mb-8">
-        <div className="flex items-center justify-between max-w-3xl mx-auto">
+        <div className="flex items-center justify-between w-full">
           {steps.map((step, index) => (
             <div key={step.number} className="flex items-center flex-1">
               <div className="flex flex-col items-center flex-1">

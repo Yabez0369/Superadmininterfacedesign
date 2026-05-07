@@ -8,7 +8,7 @@ export function StaffCreatedPage() {
   const { staffId } = useParams();
 
   return (
-    <div className="max-w-[800px] mx-auto py-12">
+    <div className="w-full max-w-none py-10">
       <div className="text-center mb-8">
         <div className="w-20 h-20 rounded-full bg-success/10 flex items-center justify-center mx-auto mb-4">
           <CheckCircle2 className="w-10 h-10 text-success" />
@@ -17,7 +17,7 @@ export function StaffCreatedPage() {
         <p className="text-muted-foreground">The staff member is now ready for outlet operations</p>
       </div>
 
-      <Card className="mb-8">
+      <Card className="mb-8 max-w-[980px] mx-auto">
         <CardContent className="p-8">
           <div className="grid grid-cols-2 gap-6 mb-6">
             <div>
@@ -44,7 +44,7 @@ export function StaffCreatedPage() {
         </CardContent>
       </Card>
 
-      <Card className="mb-8">
+      <Card className="mb-8 max-w-[980px] mx-auto">
         <CardContent className="p-8">
           <h3 className="text-foreground mb-4">Next Steps</h3>
           <div className="space-y-4">
@@ -107,7 +107,7 @@ export function StaffCreatedPage() {
         </CardContent>
       </Card>
 
-      <div className="flex items-center justify-center gap-4">
+      <div className="flex items-center justify-center gap-4 max-w-[980px] mx-auto">
         <Link to={`/tenant-admin/staff/${staffId}`}>
           <Button>View Staff Profile</Button>
         </Link>
