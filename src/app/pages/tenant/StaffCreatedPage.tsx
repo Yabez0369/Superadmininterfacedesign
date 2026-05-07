@@ -1,11 +1,29 @@
-import { Link, useParams } from 'react-router';
+import { Link, useParams, useLocation } from 'react-router';
 import { CheckCircle2, Mail, Shield, Users, Eye } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { Card, CardContent } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 
+type CreatedStaffState = {
+  fullName?: string;
+  email?: string;
+  roleLabel?: string;
+  outletName?: string;
+  outletCode?: string;
+  sendInvite?: boolean;
+};
+
 export function StaffCreatedPage() {
   const { staffId } = useParams();
+  const location = useLocation();
+  const s = (location.state ?? {}) as CreatedStaffState;
+
+  const displayName = s.fullName?.trim() || 'Sarah Johnson';
+  const displayEmail = s.email?.trim() || 'sarah@retailhub.com';
+  const displayOutlet = s.outletName?.trim() || 'Main Store';
+  const outletSuffix = s.outletCode ? ` (${s.outletCode})` : '';
+  const displayRole = s.roleLabel?.trim() || 'Outlet Manager';
+  const invitePending = s.sendInvite !== false;
 
   return (
     <div className="w-full max-w-none py-10">
@@ -14,7 +32,11 @@ export function StaffCreatedPage() {
           <CheckCircle2 className="w-10 h-10 text-success" />
         </div>
         <h1 className="text-foreground mb-2">Staff User Created Successfully</h1>
-        <p className="text-muted-foreground">The staff member is now ready for outlet operations</p>
+        <p className="text-muted-foreground max-w-lg mx-auto">
+          {invitePending
+            ? 'An invitation will be sent if enabled. The staff member can then activate access for outlet operations.'
+            : 'The staff member is now ready for outlet operations.'}
+        </p>
       </div>
 
       <Card className="mb-8 max-w-[980px] mx-auto">
@@ -22,23 +44,26 @@ export function StaffCreatedPage() {
           <div className="grid grid-cols-2 gap-6 mb-6">
             <div>
               <p className="text-sm text-muted-foreground mb-1">Staff Name</p>
-              <p className="text-foreground">Sarah Johnson</p>
+              <p className="text-foreground">{displayName}</p>
             </div>
             <div>
               <p className="text-sm text-muted-foreground mb-1">Email</p>
-              <p className="text-foreground">sarah@retailhub.com</p>
+              <p className="text-foreground">{displayEmail}</p>
             </div>
             <div>
               <p className="text-sm text-muted-foreground mb-1">Assigned Outlet</p>
-              <p className="text-foreground">Main Store</p>
+              <p className="text-foreground">
+                {displayOutlet}
+                {outletSuffix}
+              </p>
             </div>
             <div>
               <p className="text-sm text-muted-foreground mb-1">Assigned Role</p>
-              <Badge variant="secondary">Outlet Manager</Badge>
+              <Badge variant="secondary">{displayRole}</Badge>
             </div>
             <div>
               <p className="text-sm text-muted-foreground mb-1">Invite Status</p>
-              <Badge variant="warning">Pending</Badge>
+              <Badge variant={invitePending ? 'warning' : 'secondary'}>{invitePending ? 'Pending invite' : 'Provisioned'}</Badge>
             </div>
           </div>
         </CardContent>
@@ -107,12 +132,15 @@ export function StaffCreatedPage() {
         </CardContent>
       </Card>
 
-      <div className="flex items-center justify-center gap-4 max-w-[980px] mx-auto">
+      <div className="flex flex-wrap items-center justify-center gap-3 max-w-[980px] mx-auto">
         <Link to={`/tenant-admin/staff/${staffId}`}>
           <Button>View Staff Profile</Button>
         </Link>
+        <Link to="/tenant-admin/staff">
+          <Button variant="outline">Go to Staff List</Button>
+        </Link>
         <Link to="/tenant-admin/staff/create">
-          <Button variant="outline">Add Another Staff</Button>
+          <Button variant="outline">Create Another Staff User</Button>
         </Link>
       </div>
     </div>

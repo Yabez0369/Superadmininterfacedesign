@@ -1,5 +1,6 @@
-import { Link } from 'react-router';
-import { ArrowLeft, Plus, Check, X } from 'lucide-react';
+import { Fragment, useEffect, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router';
+import { ArrowLeft, Plus, Check, X, UserPlus, CheckCircle2 } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/Card';
 
@@ -71,26 +72,94 @@ const rolePermissions = {
   },
 };
 
+type RolesFlashState = {
+  roleSaved?: boolean;
+  savedRoleName?: string;
+  savedMode?: 'created' | 'updated';
+};
+
 export function RoleTemplatesPage() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [saveBanner, setSaveBanner] = useState<{ name: string; mode: 'created' | 'updated' } | null>(null);
+
+  useEffect(() => {
+    const s = location.state as RolesFlashState | null;
+    if (!s?.roleSaved || !s.savedRoleName) return;
+    setSaveBanner({ name: s.savedRoleName, mode: s.savedMode ?? 'created' });
+    navigate(location.pathname, { replace: true, state: {} });
+  }, [location.key, location.pathname, navigate]);
+
   return (
     <div className="max-w-[1600px]">
+      {saveBanner && (
+        <div className="mb-4 flex items-start gap-3 rounded-xl border border-success/30 bg-success/10 px-4 py-3 text-sm">
+          <CheckCircle2 className="w-5 h-5 text-success shrink-0 mt-0.5" />
+          <div className="flex-1 min-w-0">
+            <p className="font-medium text-foreground">
+              {saveBanner.mode === 'updated' ? 'Role updated' : 'Custom role saved'}
+            </p>
+            <p className="text-muted-foreground">
+              {saveBanner.mode === 'updated'
+                ? `“${saveBanner.name}” was updated (demo).`
+                : `“${saveBanner.name}” is ready to assign to staff (demo).`}
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setSaveBanner(null)}
+            className="rounded-lg p-1 text-muted-foreground hover:text-foreground hover:bg-background/80"
+            aria-label="Dismiss"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      )}
       <Link to="/tenant-admin/staff" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-4">
         <ArrowLeft className="w-4 h-4" />
         Back to Staff
       </Link>
 
-      <div className="flex items-start justify-between mb-8">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between mb-8">
         <div>
           <h1 className="text-foreground mb-2">Role Templates & Permissions</h1>
           <p className="text-muted-foreground">Manage role permissions and access control</p>
         </div>
-        <Link to="/tenant-admin/roles/create">
-          <Button>
-            <Plus className="w-4 h-4" />
-            Create Custom Role
-          </Button>
-        </Link>
+        <div className="flex flex-col sm:items-end gap-2 shrink-0">
+          <div className="flex flex-wrap gap-2 justify-end">
+            <Link to="/tenant-admin/staff/create">
+              <Button>
+                <UserPlus className="w-4 h-4" />
+                Add Staff User
+              </Button>
+            </Link>
+            <Link to="/tenant-admin/staff/create" state={{ presetRole: 'outlet-manager' as const }}>
+              <Button variant="outline" size="sm">
+                Add as Outlet Manager
+              </Button>
+            </Link>
+            <Link to="/tenant-admin/staff/create" state={{ presetRole: 'cashier' as const }}>
+              <Button variant="outline" size="sm">
+                Add as Cashier
+              </Button>
+            </Link>
+          </div>
+          <Link to="/tenant-admin/roles/create">
+            <Button variant="outline" size="sm">
+              <Plus className="w-4 h-4" />
+              Create Custom Role
+            </Button>
+          </Link>
+        </div>
       </div>
+
+      <Card className="mb-6 border-primary/20 bg-primary/5">
+        <CardContent className="py-4 px-6 text-sm text-muted-foreground">
+          Use <strong className="text-foreground">Add Staff User</strong> to open the staff wizard, or{' '}
+          <strong className="text-foreground">Add as Outlet Manager</strong> /{' '}
+          <strong className="text-foreground">Add as Cashier</strong> to start with that role pre-selected (this sprint).
+        </CardContent>
+      </Card>
 
       <Card>
         <CardHeader>
@@ -113,8 +182,8 @@ export function RoleTemplatesPage() {
               </thead>
               <tbody>
                 {Object.entries(permissions).map(([group, perms]) => (
-                  <>
-                    <tr key={group} className="border-b border-border bg-accent/20">
+                  <Fragment key={group}>
+                    <tr className="border-b border-border bg-accent/20">
                       <td className="px-6 py-3 text-sm font-medium text-foreground sticky left-0 bg-accent/20" colSpan={5}>
                         {group}
                       </td>
@@ -138,7 +207,7 @@ export function RoleTemplatesPage() {
                         })}
                       </tr>
                     ))}
-                  </>
+                  </Fragment>
                 ))}
               </tbody>
             </table>
