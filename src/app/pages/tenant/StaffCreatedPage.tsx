@@ -84,7 +84,7 @@ export function StaffCreatedPage() {
                   Verify the assigned role permissions and access levels
                 </p>
               </div>
-              <Link to={`/tenant/staff/${staffId}`}>
+              <Link to={`/tenant-admin/staff/${staffId}`}>
                 <Button variant="outline" size="sm">Review</Button>
               </Link>
             </div>
@@ -99,7 +99,7 @@ export function StaffCreatedPage() {
                   Continue building your team by adding more staff members
                 </p>
               </div>
-              <Link to="/tenant/staff/create">
+              <Link to="/tenant-admin/staff/create">
                 <Button variant="outline" size="sm">Add Staff</Button>
               </Link>
             </div>
@@ -108,10 +108,10 @@ export function StaffCreatedPage() {
       </Card>
 
       <div className="flex items-center justify-center gap-4">
-        <Link to={`/tenant/staff/${staffId}`}>
+        <Link to={`/tenant-admin/staff/${staffId}`}>
           <Button>View Staff Profile</Button>
         </Link>
-        <Link to="/tenant/staff/create">
+        <Link to="/tenant-admin/staff/create">
           <Button variant="outline">Add Another Staff</Button>
         </Link>
       </div>

@@ -57,13 +57,13 @@ export function StaffRolesPage() {
           <p className="text-muted-foreground">Manage staff users and role templates</p>
         </div>
         <div className="flex items-center gap-3">
-          <Link to="/tenant/staff/roles">
+          <Link to="/tenant-admin/roles">
             <Button variant="outline">
               <Shield className="w-4 h-4" />
               Manage Roles
             </Button>
           </Link>
-          <Link to="/tenant/staff/create">
+          <Link to="/tenant-admin/staff/create">
             <Button>
               <Plus className="w-4 h-4" />
               Add Staff
@@ -148,7 +148,7 @@ export function StaffRolesPage() {
                 {staff.map((member) => (
                   <tr key={member.id} className="border-b border-border hover:bg-accent/30 transition-colors">
                     <td className="px-6 py-4">
-                      <Link to={`/tenant/staff/${member.id}`} className="text-sm text-foreground hover:text-primary">
+                      <Link to={`/tenant-admin/staff/${member.id}`} className="text-sm text-foreground hover:text-primary">
                         {member.name}
                       </Link>
                     </td>

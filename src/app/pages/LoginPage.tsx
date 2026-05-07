@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { Eye, EyeOff, Globe } from 'lucide-react';
+import { Eye, EyeOff, Globe, Shield, Building2 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 
@@ -9,10 +9,11 @@ export function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [role, setRole] = useState<'super-admin' | 'tenant-admin'>('super-admin');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    navigate('/');
+    navigate(role === 'super-admin' ? '/super-admin/dashboard' : '/tenant-admin/dashboard');
   };
 
   return (
@@ -45,7 +46,7 @@ export function LoginPage() {
             and control.
           </p>
 
-          <div className="bg-white/80 backdrop-blur border border-border rounded-lg p-6 shadow-sm">
+          <div className="bg-white/80 backdrop-blur border border-border rounded-2xl p-6 shadow-sm">
             <div className="flex items-start gap-3">
               <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
                 <Globe className="w-5 h-5 text-primary" />
@@ -66,11 +67,48 @@ export function LoginPage() {
         <div className="mb-8">
           <h2 className="text-foreground mb-2">Welcome Back</h2>
           <p className="text-sm text-muted-foreground">
-            Sign in to access the Super Admin Portal
+            Sign in to access your admin workspace
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
+          <div>
+            <label htmlFor="role" className="block text-sm mb-2">
+              Portal
+            </label>
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                type="button"
+                onClick={() => setRole('super-admin')}
+                className={[
+                  'flex items-center gap-2 rounded-xl border px-4 py-3 text-sm transition-colors',
+                  role === 'super-admin'
+                    ? 'border-primary bg-accent/50 text-foreground'
+                    : 'border-border bg-background hover:bg-accent/30 text-muted-foreground',
+                ].join(' ')}
+              >
+                <Shield className="h-4 w-4" />
+                Super Admin
+              </button>
+              <button
+                type="button"
+                onClick={() => setRole('tenant-admin')}
+                className={[
+                  'flex items-center gap-2 rounded-xl border px-4 py-3 text-sm transition-colors',
+                  role === 'tenant-admin'
+                    ? 'border-primary bg-accent/50 text-foreground'
+                    : 'border-border bg-background hover:bg-accent/30 text-muted-foreground',
+                ].join(' ')}
+              >
+                <Building2 className="h-4 w-4" />
+                Tenant Admin
+              </button>
+            </div>
+            <p className="text-xs text-muted-foreground mt-2">
+              Demo routing only. Select a portal to preview the full admin journey.
+            </p>
+          </div>
+
           <div>
             <label htmlFor="email" className="block text-sm mb-2">
               Email Address
@@ -130,7 +168,7 @@ export function LoginPage() {
           <div className="pt-4 text-center">
             <p className="text-xs text-muted-foreground bg-accent/50 rounded-lg py-2 px-4 inline-flex items-center gap-2">
               <span className="w-2 h-2 bg-primary rounded-full"></span>
-              Super Admin Access Only
+              {role === 'super-admin' ? 'Super Admin Portal' : 'Tenant Admin Portal'}
             </p>
           </div>
         </form>

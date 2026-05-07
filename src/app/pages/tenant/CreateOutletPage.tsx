@@ -19,12 +19,12 @@ export function CreateOutletPage() {
   const [currentStep, setCurrentStep] = useState(1);
 
   const handleSubmit = () => {
-    navigate('/tenant/outlets/created/main-store');
+    navigate('/tenant-admin/outlets/created/main-store');
   };
 
   return (
     <div className="max-w-[1200px]">
-      <Link to="/tenant/outlets" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-4">
+      <Link to="/tenant-admin/outlets" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-4">
         <ArrowLeft className="w-4 h-4" />
         Back to Outlets
       </Link>
@@ -366,7 +366,7 @@ export function CreateOutletPage() {
                   </div>
                   <div className="flex gap-2">
                     <Button variant="outline" size="sm">Assign Existing User</Button>
-                    <Link to="/tenant/staff/create">
+                      <Link to="/tenant-admin/staff/create">
                       <Button size="sm">Create New User</Button>
                     </Link>
                   </div>

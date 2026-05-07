@@ -66,7 +66,7 @@ export function TenantCreatedPage() {
                   Set up physical or virtual outlets for the tenant's business locations
                 </p>
               </div>
-              <Link to={`/tenants/${tenantId}`}>
+              <Link to={`/super-admin/tenants/${tenantId}`}>
                 <Button variant="outline" size="sm">Configure</Button>
               </Link>
             </div>
@@ -81,7 +81,7 @@ export function TenantCreatedPage() {
                   Enable or disable modules and features based on subscription plan
                 </p>
               </div>
-              <Link to={`/subscriptions/${tenantId}`}>
+              <Link to={`/super-admin/tenants/${tenantId}/subscription`}>
                 <Button variant="outline" size="sm">Manage</Button>
               </Link>
             </div>
@@ -96,7 +96,7 @@ export function TenantCreatedPage() {
                   View complete tenant details, subscription info, and usage metrics
                 </p>
               </div>
-              <Link to={`/tenants/${tenantId}`}>
+              <Link to={`/super-admin/tenants/${tenantId}`}>
                 <Button variant="outline" size="sm">View Profile</Button>
               </Link>
             </div>
@@ -105,10 +105,10 @@ export function TenantCreatedPage() {
       </Card>
 
       <div className="flex items-center justify-center gap-4">
-        <Link to={`/tenants/${tenantId}`}>
+        <Link to={`/super-admin/tenants/${tenantId}`}>
           <Button>View Tenant Profile</Button>
         </Link>
-        <Link to="/tenants/create">
+        <Link to="/super-admin/tenants/create">
           <Button variant="outline">Create Another Tenant</Button>
         </Link>
       </div>

@@ -5,10 +5,10 @@ import { Badge } from '../../components/ui/Badge';
 import { Building2, Users, AlertCircle, CheckCircle2, Clock, TrendingUp } from 'lucide-react';
 
 const quickActions = [
-  { label: 'Create Outlet', path: '/tenant/outlets/create', icon: Building2 },
-  { label: 'Add Staff', path: '/tenant/staff/create', icon: Users },
-  { label: 'Configure Roles', path: '/tenant/staff/roles', icon: CheckCircle2 },
-  { label: 'View Inventory', path: '/tenant/inventory', icon: AlertCircle },
+  { label: 'Create Outlet', path: '/tenant-admin/outlets/create', icon: Building2 },
+  { label: 'Add Staff', path: '/tenant-admin/staff/create', icon: Users },
+  { label: 'Manage Roles', path: '/tenant-admin/roles', icon: CheckCircle2 },
+  { label: 'View Inventory', path: '/tenant-admin/inventory', icon: AlertCircle },
 ];
 
 const outletSetupProgress = [

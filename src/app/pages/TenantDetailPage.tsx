@@ -36,7 +36,7 @@ export function TenantDetailPage() {
   return (
     <div className="max-w-[1600px]">
       <div className="mb-6">
-        <Link to="/tenants" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-4">
+        <Link to="/super-admin/tenants" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-4">
           <ArrowLeft className="w-4 h-4" />
           Back to Tenants
         </Link>
@@ -295,7 +295,7 @@ export function TenantDetailPage() {
               <CardTitle>Quick Actions</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
-              <Link to={`/subscriptions/${tenantId}`}>
+              <Link to={`/super-admin/tenants/${tenantId}/subscription`}>
                 <Button variant="outline" className="w-full justify-start">
                   Manage Subscription
                 </Button>

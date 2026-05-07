@@ -10,7 +10,7 @@ export function OutletDetailPage() {
 
   return (
     <div className="max-w-[1600px]">
-      <Link to="/tenant/outlets" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-4">
+      <Link to="/tenant-admin/outlets" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-4">
         <ArrowLeft className="w-4 h-4" />
         Back to Outlets
       </Link>
@@ -28,7 +28,7 @@ export function OutletDetailPage() {
             <Edit className="w-4 h-4" />
             Edit Outlet
           </Button>
-          <Link to="/tenant/staff/create">
+          <Link to="/tenant-admin/staff/create">
             <Button variant="outline">
               <Users className="w-4 h-4" />
               Assign Staff

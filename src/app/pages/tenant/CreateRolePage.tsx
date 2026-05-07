@@ -9,7 +9,7 @@ import { cn } from '../../lib/utils';
 export function CreateRolePage() {
   return (
     <div className="max-w-[1000px]">
-      <Link to="/tenant/staff/roles" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-4">
+      <Link to="/tenant-admin/roles" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-4">
         <ArrowLeft className="w-4 h-4" />
         Back to Role Templates
       </Link>
@@ -134,7 +134,7 @@ export function CreateRolePage() {
       </div>
 
       <div className="flex items-center justify-end gap-3 mt-8 pt-6 border-t border-border">
-        <Link to="/tenant/staff/roles">
+        <Link to="/tenant-admin/roles">
           <Button variant="outline">Cancel</Button>
         </Link>
         <Button>

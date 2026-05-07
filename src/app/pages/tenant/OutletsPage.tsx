@@ -58,7 +58,7 @@ export function OutletsPage() {
           <h1 className="text-foreground mb-2">Outlet Management</h1>
           <p className="text-muted-foreground">Manage all outlets under your business</p>
         </div>
-        <Link to="/tenant/outlets/create">
+        <Link to="/tenant-admin/outlets/create">
           <Button>
             <Plus className="w-4 h-4" />
             Create Outlet
@@ -74,7 +74,7 @@ export function OutletsPage() {
             </div>
             <h3 className="text-foreground mb-2">No Outlets Yet</h3>
             <p className="text-muted-foreground mb-6">Create your first outlet to start selling</p>
-            <Link to="/tenant/outlets/create">
+            <Link to="/tenant-admin/outlets/create">
               <Button>
                 <Plus className="w-4 h-4" />
                 Create Outlet
@@ -134,7 +134,7 @@ export function OutletsPage() {
                   {outlets.map((outlet) => (
                     <tr key={outlet.id} className="border-b border-border hover:bg-accent/30 transition-colors">
                       <td className="px-6 py-4">
-                        <Link to={`/tenant/outlets/${outlet.id}`} className="text-sm text-foreground hover:text-primary">
+                        <Link to={`/tenant-admin/outlets/${outlet.id}`} className="text-sm text-foreground hover:text-primary">
                           {outlet.name}
                         </Link>
                       </td>

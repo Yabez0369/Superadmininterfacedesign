@@ -74,7 +74,7 @@ const rolePermissions = {
 export function RoleTemplatesPage() {
   return (
     <div className="max-w-[1600px]">
-      <Link to="/tenant/staff" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-4">
+      <Link to="/tenant-admin/staff" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-4">
         <ArrowLeft className="w-4 h-4" />
         Back to Staff
       </Link>
@@ -84,7 +84,7 @@ export function RoleTemplatesPage() {
           <h1 className="text-foreground mb-2">Role Templates & Permissions</h1>
           <p className="text-muted-foreground">Manage role permissions and access control</p>
         </div>
-        <Link to="/tenant/staff/roles/create">
+        <Link to="/tenant-admin/roles/create">
           <Button>
             <Plus className="w-4 h-4" />
             Create Custom Role

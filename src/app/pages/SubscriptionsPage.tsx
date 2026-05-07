@@ -40,7 +40,7 @@ export function SubscriptionsPage() {
 
   return (
     <div className="max-w-[1600px]">
-      <Link to={`/tenants/${tenantId}`} className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-4">
+      <Link to={`/super-admin/tenants/${tenantId}`} className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-4">
         <ArrowLeft className="w-4 h-4" />
         Back to Tenant
       </Link>

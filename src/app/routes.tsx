@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router';
+import { createBrowserRouter, Navigate } from 'react-router';
 import { LoginPage } from './pages/LoginPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { TenantsPage } from './pages/TenantsPage';
@@ -26,19 +26,25 @@ import { StaffCreatedPage } from './pages/tenant/StaffCreatedPage';
 
 export const router = createBrowserRouter([
   {
+    path: '/',
+    Component: LoginPage,
+  },
+  {
     path: '/login',
     Component: LoginPage,
   },
   {
-    path: '/',
+    path: '/super-admin',
     Component: AppLayout,
     children: [
-      { index: true, Component: DashboardPage },
+      { index: true, Component: () => <Navigate to="/super-admin/dashboard" replace /> },
+      { path: 'dashboard', Component: DashboardPage },
       { path: 'tenants', Component: TenantsPage },
-      { path: 'tenants/:tenantId', Component: TenantDetailPage },
       { path: 'tenants/create', Component: CreateTenantPage },
       { path: 'tenants/created/:tenantId', Component: TenantCreatedPage },
-      { path: 'subscriptions/:tenantId', Component: SubscriptionsPage },
+      { path: 'tenants/:tenantId', Component: TenantDetailPage },
+      { path: 'tenants/:tenantId/subscription', Component: SubscriptionsPage },
+      { path: 'subscriptions', Component: TenantsPage },
       { path: 'platform-health', Component: PlatformHealthPage },
       { path: 'audit-logs', Component: AuditLogsPage },
       { path: 'support', Component: SupportPage },
@@ -46,21 +52,22 @@ export const router = createBrowserRouter([
     ],
   },
   {
-    path: '/tenant',
+    path: '/tenant-admin',
     Component: TenantLayout,
     children: [
-      { index: true, Component: TenantDashboardPage },
+      { index: true, Component: () => <Navigate to="/tenant-admin/dashboard" replace /> },
+      { path: 'dashboard', Component: TenantDashboardPage },
       { path: 'outlets', Component: OutletsPage },
       { path: 'outlets/create', Component: CreateOutletPage },
       { path: 'outlets/created/:outletId', Component: OutletCreatedPage },
       { path: 'outlets/:outletId', Component: OutletDetailPage },
       { path: 'staff', Component: StaffRolesPage },
-      { path: 'staff/roles', Component: RoleTemplatesPage },
-      { path: 'staff/roles/create', Component: CreateRolePage },
-      { path: 'staff/roles/:roleId/edit', Component: CreateRolePage },
       { path: 'staff/create', Component: CreateStaffPage },
       { path: 'staff/:staffId', Component: StaffDetailPage },
       { path: 'staff/created/:staffId', Component: StaffCreatedPage },
+      { path: 'roles', Component: RoleTemplatesPage },
+      { path: 'roles/create', Component: CreateRolePage },
+      { path: 'roles/:roleId/edit', Component: CreateRolePage },
     ],
   },
 ]);

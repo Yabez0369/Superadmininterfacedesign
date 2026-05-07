@@ -99,10 +99,10 @@ export function OutletCreatedPage() {
       </Card>
 
       <div className="flex items-center justify-center gap-4">
-        <Link to={`/tenant/outlets/${outletId}`}>
+        <Link to={`/tenant-admin/outlets/${outletId}`}>
           <Button>View Outlet</Button>
         </Link>
-        <Link to="/tenant/outlets/create">
+        <Link to="/tenant-admin/outlets/create">
           <Button variant="outline">Create Another Outlet</Button>
         </Link>
       </div>

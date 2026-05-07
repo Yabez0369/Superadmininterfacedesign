@@ -9,12 +9,12 @@ export function CreateStaffPage() {
   const navigate = useNavigate();
 
   const handleSubmit = () => {
-    navigate('/tenant/staff/created/1');
+    navigate('/tenant-admin/staff/created/1');
   };
 
   return (
     <div className="max-w-[1200px]">
-      <Link to="/tenant/staff" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-4">
+      <Link to="/tenant-admin/staff" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-4">
         <ArrowLeft className="w-4 h-4" />
         Back to Staff
       </Link>

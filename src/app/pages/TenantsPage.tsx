@@ -80,7 +80,7 @@ export function TenantsPage() {
             <Download className="w-4 h-4" />
             Export
           </Button>
-          <Link to="/tenants/create">
+          <Link to="/super-admin/tenants/create">
             <Button>
               <Plus className="w-4 h-4" />
               Create Tenant
@@ -167,7 +167,7 @@ export function TenantsPage() {
                 {tenants.map((tenant) => (
                   <tr key={tenant.id} className="border-b border-border hover:bg-accent/30 transition-colors">
                     <td className="px-6 py-4">
-                      <Link to={`/tenants/${tenant.tenantId}`} className="text-sm text-foreground hover:text-primary">
+                      <Link to={`/super-admin/tenants/${tenant.tenantId}`} className="text-sm text-foreground hover:text-primary">
                         {tenant.businessName}
                       </Link>
                     </td>
