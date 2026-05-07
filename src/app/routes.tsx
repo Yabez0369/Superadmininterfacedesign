@@ -11,6 +11,18 @@ import { AuditLogsPage } from './pages/AuditLogsPage';
 import { SupportPage } from './pages/SupportPage';
 import { SettingsPage } from './pages/SettingsPage';
 import { AppLayout } from './components/layouts/AppLayout';
+import { TenantLayout } from './components/layouts/TenantLayout';
+import { TenantDashboardPage } from './pages/tenant/TenantDashboardPage';
+import { OutletsPage } from './pages/tenant/OutletsPage';
+import { CreateOutletPage } from './pages/tenant/CreateOutletPage';
+import { OutletCreatedPage } from './pages/tenant/OutletCreatedPage';
+import { OutletDetailPage } from './pages/tenant/OutletDetailPage';
+import { StaffRolesPage } from './pages/tenant/StaffRolesPage';
+import { RoleTemplatesPage } from './pages/tenant/RoleTemplatesPage';
+import { CreateRolePage } from './pages/tenant/CreateRolePage';
+import { CreateStaffPage } from './pages/tenant/CreateStaffPage';
+import { StaffDetailPage } from './pages/tenant/StaffDetailPage';
+import { StaffCreatedPage } from './pages/tenant/StaffCreatedPage';
 
 export const router = createBrowserRouter([
   {
@@ -31,6 +43,24 @@ export const router = createBrowserRouter([
       { path: 'audit-logs', Component: AuditLogsPage },
       { path: 'support', Component: SupportPage },
       { path: 'settings', Component: SettingsPage },
+    ],
+  },
+  {
+    path: '/tenant',
+    Component: TenantLayout,
+    children: [
+      { index: true, Component: TenantDashboardPage },
+      { path: 'outlets', Component: OutletsPage },
+      { path: 'outlets/create', Component: CreateOutletPage },
+      { path: 'outlets/created/:outletId', Component: OutletCreatedPage },
+      { path: 'outlets/:outletId', Component: OutletDetailPage },
+      { path: 'staff', Component: StaffRolesPage },
+      { path: 'staff/roles', Component: RoleTemplatesPage },
+      { path: 'staff/roles/create', Component: CreateRolePage },
+      { path: 'staff/roles/:roleId/edit', Component: CreateRolePage },
+      { path: 'staff/create', Component: CreateStaffPage },
+      { path: 'staff/:staffId', Component: StaffDetailPage },
+      { path: 'staff/created/:staffId', Component: StaffCreatedPage },
     ],
   },
 ]);
