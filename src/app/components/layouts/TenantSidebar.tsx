@@ -11,6 +11,8 @@ import {
   ChevronRight,
   Plus,
   ShieldCheck,
+  KeyRound,
+  Workflow,
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { useState } from 'react';
@@ -121,6 +123,8 @@ export function TenantSidebar() {
                 { path: '/tenant-admin/staff/create', label: 'Create Staff User', icon: Plus, helper: 'Add manager/cashier/staff users' },
                 { path: '/tenant-admin/roles', label: 'Role Templates', icon: Lock, helper: 'Roles within Super Admin boundary' },
                 { path: '/tenant-admin/roles/create', label: 'Create Role', icon: ShieldCheck, helper: 'Create custom roles (if allowed)' },
+                { path: '/tenant-admin/permissions', label: 'Permissions', icon: KeyRound, helper: 'View role permissions and locked boundary' },
+                { path: '/tenant-admin/access-boundary', label: 'Access Boundary', icon: Workflow, helper: 'What is allowed vs locked by platform' },
               ] as NavItem[]).map((c) => (
                 <NavLink
                   key={c.path}
@@ -141,6 +145,25 @@ export function TenantSidebar() {
               ))}
             </div>
           )}
+        </div>
+
+        <div className="space-y-1">
+          <p className="px-3 text-[11px] uppercase tracking-wide text-muted-foreground mb-2">Operational Use</p>
+          <NavLink
+            to="/tenant-admin/role-access"
+            className={({ isActive }) =>
+              cn(
+                'flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors text-sm',
+                isActive
+                  ? 'bg-sidebar-accent text-sidebar-accent-foreground border-l-4 border-l-primary -ml-px pl-[11px]'
+                  : 'text-sidebar-foreground hover:bg-sidebar-accent/50'
+              )
+            }
+            title="How roles use the system"
+          >
+            <ShieldCheck className="w-5 h-5" />
+            <span>Role Access in Action</span>
+          </NavLink>
         </div>
 
         <div className="space-y-1">

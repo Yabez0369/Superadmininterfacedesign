@@ -5,7 +5,6 @@ import {
   CreditCard,
   KeyRound,
   Activity,
-  Headphones,
   FileText,
   Settings,
   LogOut,
@@ -17,6 +16,13 @@ import {
   UsersRound,
   Sparkles,
   ListChecks,
+  Workflow,
+  DatabaseZap,
+  Blocks,
+  Shield,
+  BookOpenCheck,
+  CloudCog,
+  HardDriveDownload,
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { useMemo, useState } from 'react';
@@ -38,38 +44,50 @@ const GROUPS: NavGroup[] = [
   },
   {
     id: 'access',
-    label: 'Access Control',
+    label: 'Access System',
     collapsible: true,
     items: [
       {
-        path: '/super-admin/access-templates',
-        label: 'Access Templates',
-        icon: ShieldCheck,
-        helper: 'Platform templates (not staff users)',
+        path: '/super-admin/access-control',
+        label: 'Access Control',
+        icon: Workflow,
+        helper: 'Master features, permissions, templates',
         children: [
-          { path: '/super-admin/access-templates', label: 'Overview', icon: KeyRound },
-          { path: '/super-admin/access-templates/role-packs', label: 'Role Packs', icon: Layers },
-          { path: '/super-admin/access-templates/user-groups', label: 'User Group Templates', icon: UsersRound },
-          { path: '/super-admin/access-templates/permissions', label: 'Permission Catalog', icon: ListChecks },
-          { path: '/super-admin/access-templates/generate', label: 'Generate Role Pack', icon: Sparkles },
-          { path: '/super-admin/access-templates/assignments', label: 'Template Assignments', icon: ShieldCheck },
+          { path: '/super-admin/access-control', label: 'Overview', icon: KeyRound },
+          { path: '/super-admin/access-control/features', label: 'Feature Registry', icon: Blocks },
+          { path: '/super-admin/access-control/permission-actions', label: 'Permission Actions', icon: ListChecks },
+          { path: '/super-admin/access-control/role-templates', label: 'Role Templates', icon: Layers },
+          { path: '/super-admin/access-control/template-management', label: 'Template Management', icon: DatabaseZap },
+          { path: '/super-admin/access-control/generate-role-pack', label: 'Generate Role Pack', icon: Sparkles },
+          { path: '/super-admin/access-control/template-assignments', label: 'Template Assignments', icon: ShieldCheck },
         ],
       },
     ],
   },
   {
-    id: 'monitoring',
-    label: 'Monitoring',
+    id: 'governance',
+    label: 'Governance',
+    collapsible: true,
     items: [
-      { path: '/super-admin/platform-health', label: 'Platform Health', icon: Activity, helper: 'Incidents, uptime, system status' },
-      { path: '/super-admin/audit-logs', label: 'Audit Logs', icon: FileText, helper: 'Sensitive events and governance' },
+      {
+        path: '/super-admin/governance',
+        label: 'Governance',
+        icon: Shield,
+        helper: 'Audit, versioning, backups, rollout',
+        children: [
+          { path: '/super-admin/governance', label: 'Overview', icon: BookOpenCheck },
+          { path: '/super-admin/governance/monitor-audit', label: 'Monitor & Audit', icon: FileText },
+          { path: '/super-admin/governance/template-versioning', label: 'Template Versioning', icon: CloudCog },
+          { path: '/super-admin/governance/feature-updates', label: 'Feature Updates', icon: Activity },
+          { path: '/super-admin/governance/backup-security', label: 'Backup & Security', icon: HardDriveDownload },
+        ],
+      },
     ],
   },
   {
     id: 'system',
     label: 'System',
     items: [
-      { path: '/super-admin/support', label: 'Support', icon: Headphones },
       { path: '/super-admin/settings', label: 'Settings', icon: Settings },
     ],
   },
@@ -77,17 +95,24 @@ const GROUPS: NavGroup[] = [
 
 export function Sidebar() {
   const { pathname } = useLocation();
-  const defaultAccessOpen = pathname.startsWith('/super-admin/access-templates');
+  const defaultAccessOpen =
+    pathname.startsWith('/super-admin/access-control') || pathname.startsWith('/super-admin/access-templates');
+  const defaultGovOpen = pathname.startsWith('/super-admin/governance');
   const [open, setOpen] = useState<Record<string, boolean>>({
     access: defaultAccessOpen,
+    governance: defaultGovOpen,
   });
 
   const activeChildPath = useMemo(() => {
-    if (!pathname.startsWith('/super-admin/access-templates')) return null;
+    const supportedParents = ['/super-admin/access-control', '/super-admin/access-templates', '/super-admin/governance'];
+    if (!supportedParents.some((p) => pathname.startsWith(p))) return null;
     const exact = GROUPS.flatMap((g) =>
       (g as any).items?.flatMap((i: any) => (i.children ? i.children : [i]))
     ).find((x: NavItem) => x.path === pathname);
-    return exact?.path ?? '/super-admin/access-templates';
+    if (exact?.path) return exact.path;
+    if (pathname.startsWith('/super-admin/governance')) return '/super-admin/governance';
+    if (pathname.startsWith('/super-admin/access-control')) return '/super-admin/access-control';
+    return '/super-admin/access-templates';
   }, [pathname]);
 
   return (
