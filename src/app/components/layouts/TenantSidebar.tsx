@@ -1,33 +1,29 @@
-import { NavLink } from 'react-router';
+import { NavLink, useLocation } from 'react-router';
 import {
   LayoutDashboard,
   Building2,
   Users,
-  Package,
-  Boxes,
-  BarChart3,
   Settings,
   LogOut,
   User,
   Lock,
+  ChevronDown,
+  ChevronRight,
+  Plus,
+  ShieldCheck,
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
+import { useState } from 'react';
 
-const coreMenu = [
-  { path: '/tenant-admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { path: '/tenant-admin/outlets', label: 'Outlets', icon: Building2 },
-  { path: '/tenant-admin/staff', label: 'Staff & Roles', icon: Users },
-  { path: '/tenant-admin/roles', label: 'Role Templates', icon: Lock },
-  { path: '/tenant-admin/settings', label: 'Settings', icon: Settings },
-];
-
-const comingSoon = [
-  { label: 'Inventory', icon: Boxes },
-  { label: 'Catalog', icon: Package },
-  { label: 'Reports', icon: BarChart3 },
-];
+type NavItem = { path: string; label: string; icon: any; helper?: string };
 
 export function TenantSidebar() {
+  const { pathname } = useLocation();
+  const [open, setOpen] = useState<Record<string, boolean>>({
+    outlets: pathname.startsWith('/tenant-admin/outlets'),
+    people: pathname.startsWith('/tenant-admin/staff') || pathname.startsWith('/tenant-admin/roles'),
+  });
+
   return (
     <aside className="w-64 h-screen bg-sidebar border-r border-sidebar-border flex flex-col fixed left-0 top-0">
       <div className="p-6 border-b border-sidebar-border">
@@ -37,12 +33,12 @@ export function TenantSidebar() {
         </div>
       </div>
 
-      <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-        {coreMenu.map((item) => (
+      <nav className="flex-1 p-4 space-y-4 overflow-y-auto">
+        <div className="space-y-1">
+          <p className="px-3 text-[11px] uppercase tracking-wide text-muted-foreground mb-2">Workspace</p>
           <NavLink
-            key={item.path}
-            to={item.path}
-            end={item.path.endsWith('/dashboard')}
+            to="/tenant-admin/dashboard"
+            end
             className={({ isActive }) =>
               cn(
                 'flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors text-sm',
@@ -52,25 +48,117 @@ export function TenantSidebar() {
               )
             }
           >
-            <item.icon className="w-5 h-5" />
-            <span>{item.label}</span>
+            <LayoutDashboard className="w-5 h-5" />
+            <span>Dashboard</span>
           </NavLink>
-        ))}
+        </div>
 
-        <div className="pt-4 mt-4 border-t border-sidebar-border">
-          <p className="px-3 text-[11px] uppercase tracking-wide text-muted-foreground mb-2">
-            Coming soon
-          </p>
-          {comingSoon.map((item) => (
-            <div
-              key={item.label}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-muted-foreground/80 cursor-not-allowed"
-            >
-              <item.icon className="w-5 h-5" />
-              <span>{item.label}</span>
-              <span className="ml-auto text-[10px] rounded bg-accent px-2 py-0.5">Soon</span>
+        <div className="space-y-1">
+          <p className="px-3 text-[11px] uppercase tracking-wide text-muted-foreground mb-2">Operations</p>
+          <button
+            type="button"
+            onClick={() => setOpen((o) => ({ ...o, outlets: !o.outlets }))}
+            className={cn(
+              'w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors text-sm',
+              pathname.startsWith('/tenant-admin/outlets')
+                ? 'bg-sidebar-accent text-sidebar-accent-foreground border-l-4 border-l-primary -ml-px pl-[11px]'
+                : 'text-sidebar-foreground hover:bg-sidebar-accent/50'
+            )}
+            title="Outlet management & setup"
+          >
+            <Building2 className="w-5 h-5" />
+            <span className="flex-1 text-left">Outlets</span>
+            {open.outlets ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+          </button>
+          {open.outlets && (
+            <div className="ml-3.5 pl-3 border-l border-sidebar-border space-y-1">
+              {([
+                { path: '/tenant-admin/outlets', label: 'All Outlets', icon: Building2, helper: 'View all outlets and status' },
+                { path: '/tenant-admin/outlets/create', label: 'Create Outlet', icon: Plus, helper: 'Create a new outlet workspace' },
+              ] as NavItem[]).map((c) => (
+                <NavLink
+                  key={c.path}
+                  to={c.path}
+                  title={c.helper}
+                  className={() =>
+                    cn(
+                      'flex items-center gap-2 px-3 py-2 rounded-lg transition-colors text-sm',
+                      pathname === c.path
+                        ? 'bg-sidebar-accent text-sidebar-accent-foreground'
+                        : 'text-sidebar-foreground/90 hover:bg-sidebar-accent/50'
+                    )
+                  }
+                >
+                  <c.icon className="w-4 h-4" />
+                  <span>{c.label}</span>
+                </NavLink>
+              ))}
             </div>
-          ))}
+          )}
+        </div>
+
+        <div className="space-y-1">
+          <p className="px-3 text-[11px] uppercase tracking-wide text-muted-foreground mb-2">People & Access</p>
+          <button
+            type="button"
+            onClick={() => setOpen((o) => ({ ...o, people: !o.people }))}
+            className={cn(
+              'w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors text-sm',
+              pathname.startsWith('/tenant-admin/staff') || pathname.startsWith('/tenant-admin/roles')
+                ? 'bg-sidebar-accent text-sidebar-accent-foreground border-l-4 border-l-primary -ml-px pl-[11px]'
+                : 'text-sidebar-foreground hover:bg-sidebar-accent/50'
+            )}
+            title="Staff users and tenant-level roles"
+          >
+            <Users className="w-5 h-5" />
+            <span className="flex-1 text-left">Staff & Roles</span>
+            {open.people ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+          </button>
+          {open.people && (
+            <div className="ml-3.5 pl-3 border-l border-sidebar-border space-y-1">
+              {([
+                { path: '/tenant-admin/staff', label: 'Staff Users', icon: Users, helper: 'Create and manage actual staff users' },
+                { path: '/tenant-admin/staff/create', label: 'Create Staff User', icon: Plus, helper: 'Add manager/cashier/staff users' },
+                { path: '/tenant-admin/roles', label: 'Role Templates', icon: Lock, helper: 'Roles within Super Admin boundary' },
+                { path: '/tenant-admin/roles/create', label: 'Create Role', icon: ShieldCheck, helper: 'Create custom roles (if allowed)' },
+              ] as NavItem[]).map((c) => (
+                <NavLink
+                  key={c.path}
+                  to={c.path}
+                  title={c.helper}
+                  className={() =>
+                    cn(
+                      'flex items-center gap-2 px-3 py-2 rounded-lg transition-colors text-sm',
+                      pathname === c.path
+                        ? 'bg-sidebar-accent text-sidebar-accent-foreground'
+                        : 'text-sidebar-foreground/90 hover:bg-sidebar-accent/50'
+                    )
+                  }
+                >
+                  <c.icon className="w-4 h-4" />
+                  <span>{c.label}</span>
+                </NavLink>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="space-y-1">
+          <p className="px-3 text-[11px] uppercase tracking-wide text-muted-foreground mb-2">System</p>
+          <NavLink
+            to="/tenant-admin/settings"
+            className={({ isActive }) =>
+              cn(
+                'flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors text-sm',
+                isActive
+                  ? 'bg-sidebar-accent text-sidebar-accent-foreground border-l-4 border-l-primary -ml-px pl-[11px]'
+                  : 'text-sidebar-foreground hover:bg-sidebar-accent/50'
+              )
+            }
+          >
+            <Settings className="w-5 h-5" />
+            <span>Settings</span>
+          </NavLink>
         </div>
       </nav>
 

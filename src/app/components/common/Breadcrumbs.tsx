@@ -20,6 +20,12 @@ const LABELS: Record<string, string> = {
   'audit-logs': 'Audit Logs',
   support: 'Support',
   settings: 'Settings',
+  'access-templates': 'Access Templates',
+  'role-packs': 'Role Packs',
+  'user-groups': 'User Group Templates',
+  permissions: 'Permission Catalog',
+  generate: 'Generate Role Pack',
+  assignments: 'Template Assignments',
 
   'tenant-admin': 'Tenant Admin',
   outlets: 'Outlets',
