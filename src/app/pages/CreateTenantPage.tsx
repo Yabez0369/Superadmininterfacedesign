@@ -7,16 +7,18 @@ import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card'
 import * as Switch from '@radix-ui/react-switch';
 import { cn } from '../lib/utils';
 import { FlowAlertModal } from '../components/common/FlowAlertModal';
+import { ROLE_PACKS, getRolePackById } from './super-admin/access-templates/accessTemplatesData';
 
 const STEPS = [
   { id: 1, title: 'Business', label: 'Business Details' },
   { id: 2, title: 'Contact', label: 'Contact Details' },
   { id: 3, title: 'Subscription', label: 'Subscription Plan' },
   { id: 4, title: 'Entitlements', label: 'Feature Entitlements' },
-  { id: 5, title: 'Admin', label: 'Tenant Admin Account' },
-  { id: 6, title: 'Settings', label: 'Tenant Settings' },
-  { id: 7, title: 'Review', label: 'Review Summary' },
-  { id: 8, title: 'Confirm', label: 'Confirm' },
+  { id: 5, title: 'Access', label: 'Access Template' },
+  { id: 6, title: 'Admin', label: 'Tenant Admin Account' },
+  { id: 7, title: 'Settings', label: 'Tenant Settings' },
+  { id: 8, title: 'Review', label: 'Review Summary' },
+  { id: 9, title: 'Confirm', label: 'Confirm' },
 ] as const;
 
 const PLANS = [
@@ -90,6 +92,9 @@ export function CreateTenantPage() {
 
     entitlements: ['pos', 'inventory', 'staff', 'reports', 'payments'] as string[],
 
+    accessTemplatePackId: 'retail-standard',
+    accessTemplateAllowCustomRoles: true,
+
     reviewAcknowledge: false,
     confirmAcknowledge: false,
   });
@@ -155,6 +160,9 @@ export function CreateTenantPage() {
       }
     }
     if (s === 5) {
+      if (!form.accessTemplatePackId) return false;
+    }
+    if (s === 6) {
       if (!form.adminFullName.trim() || !form.adminEmail.trim()) return false;
       if (form.adminEmail.toLowerCase() === 'duplicate@existing.com') {
         setModal('dupEmail');
@@ -192,6 +200,21 @@ export function CreateTenantPage() {
     if (!ok) {
       setModal('fail');
       return;
+    }
+    try {
+      const pack = getRolePackById(form.accessTemplatePackId);
+      localStorage.setItem(
+        'demo.activeRolePack',
+        JSON.stringify({
+          packId: pack.id,
+          packName: pack.name,
+          businessType: pack.businessType,
+          customRolesAllowed: form.accessTemplateAllowCustomRoles,
+          entitlements: form.entitlements,
+        })
+      );
+    } catch {
+      // best-effort demo persistence
     }
     navigate('/super-admin/tenants/created/retail-hub-inc');
   };
@@ -501,6 +524,104 @@ export function CreateTenantPage() {
           {step === 5 && (
             <Card>
               <CardHeader>
+                <CardTitle>Access Template</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 text-sm text-foreground">
+                  You’re selecting a <strong>template-level access boundary</strong>. This does not manage individual cashier/manager users.
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {ROLE_PACKS.filter((p) => p.status !== 'Deprecated').map((p) => {
+                    const selected = form.accessTemplatePackId === p.id;
+                    const recommended =
+                      (form.businessType === 'Retail' && p.businessType === 'Retail Store') ||
+                      (form.businessType === 'Restaurant' && p.businessType === 'Restaurant') ||
+                      (!form.businessType && p.id === 'retail-standard');
+                    return (
+                      <button
+                        key={p.id}
+                        type="button"
+                        onClick={() =>
+                          patch({
+                            accessTemplatePackId: p.id,
+                            accessTemplateAllowCustomRoles: p.customRolesAllowed,
+                          })
+                        }
+                        className={cn(
+                          'text-left p-5 rounded-2xl border-2 transition-all relative bg-white/60 hover:bg-white/70',
+                          selected ? 'border-primary shadow-md' : 'border-border hover:border-primary/30'
+                        )}
+                      >
+                        {recommended ? (
+                          <span className="absolute -top-2.5 left-3 text-[10px] font-medium bg-primary text-primary-foreground px-2 py-0.5 rounded-full">
+                            Recommended
+                          </span>
+                        ) : null}
+                        <p className="font-semibold text-foreground">{p.name}</p>
+                        <p className="text-xs text-muted-foreground mt-1">{p.businessType}</p>
+                        <div className="mt-4 grid grid-cols-3 gap-3 text-sm">
+                          <div>
+                            <p className="text-muted-foreground text-xs">Roles</p>
+                            <p className="text-foreground font-medium">{p.roles?.length || 5}</p>
+                          </div>
+                          <div>
+                            <p className="text-muted-foreground text-xs">Permissions</p>
+                            <p className="text-foreground font-medium">{p.permissionCount}</p>
+                          </div>
+                          <div>
+                            <p className="text-muted-foreground text-xs">Tenants</p>
+                            <p className="text-foreground font-medium">{p.assignedTenants}</p>
+                          </div>
+                        </div>
+                        <p className="text-[11px] text-muted-foreground mt-3">
+                          Access boundary: governance-first · {p.customRolesAllowed ? 'custom roles permitted (within boundary)' : 'custom roles locked'}
+                        </p>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <div className="rounded-2xl border border-border bg-white/60 p-5">
+                  <p className="text-sm font-medium text-foreground mb-2">Preview</p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                    <div className="rounded-2xl border border-border bg-white/70 p-4">
+                      <p className="text-xs text-muted-foreground mb-1">Recommended roles</p>
+                      <ul className="text-sm text-foreground space-y-1">
+                        {['Tenant Admin', 'Outlet Manager', 'Cashier', 'Stock Keeper', 'Maintenance Staff'].map((r) => (
+                          <li key={r}>• {r}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div className="rounded-2xl border border-border bg-white/70 p-4">
+                      <p className="text-xs text-muted-foreground mb-1">Custom roles</p>
+                      <div className="flex items-center justify-between gap-4">
+                        <div className="min-w-0">
+                          <p className="text-sm text-foreground font-medium">
+                            {form.accessTemplateAllowCustomRoles ? 'Allow within boundary' : 'Locked by Super Admin'}
+                          </p>
+                          <p className="text-xs text-muted-foreground mt-0.5">
+                            Tenant Admin can {form.accessTemplateAllowCustomRoles ? 'create custom roles within limits.' : 'not create or edit roles.'}
+                          </p>
+                        </div>
+                        <Switch.Root
+                          checked={form.accessTemplateAllowCustomRoles}
+                          onCheckedChange={(v) => patch({ accessTemplateAllowCustomRoles: v })}
+                          className={cn('w-11 h-6 rounded-full shrink-0 transition-colors', form.accessTemplateAllowCustomRoles ? 'bg-primary' : 'bg-switch-background')}
+                        >
+                          <Switch.Thumb className="block w-5 h-5 bg-white rounded-full transition-transform translate-x-0.5 data-[state=checked]:translate-x-[22px]" />
+                        </Switch.Root>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {step === 6 && (
+            <Card>
+              <CardHeader>
                 <CardTitle>Tenant Admin Account</CardTitle>
               </CardHeader>
               <CardContent className="space-y-6">
@@ -567,7 +688,7 @@ export function CreateTenantPage() {
             </Card>
           )}
 
-          {step === 6 && (
+          {step === 7 && (
             <Card>
               <CardHeader>
                 <CardTitle>Tenant Settings</CardTitle>
@@ -610,7 +731,7 @@ export function CreateTenantPage() {
             </Card>
           )}
 
-          {step === 7 && (
+          {step === 8 && (
             <div className="space-y-4">
               {[
                 { title: 'Business', s: 1, rows: [
@@ -630,12 +751,16 @@ export function CreateTenantPage() {
                   ['Outlets / Users / Products', `${form.maxOutlets} / ${form.maxUsers} / ${form.maxProducts}`],
                 ] },
                 { title: 'Entitlements', s: 4, rows: [['Enabled', form.entitlements.join(', ') || 'None']] },
-                { title: 'Tenant Admin', s: 5, rows: [
+                { title: 'Access Template', s: 5, rows: [
+                  ['Role pack', getRolePackById(form.accessTemplatePackId).name],
+                  ['Custom roles', form.accessTemplateAllowCustomRoles ? 'Allowed (within boundary)' : 'Locked by Super Admin'],
+                ] },
+                { title: 'Tenant Admin', s: 6, rows: [
                   ['Name', form.adminFullName || '—'],
                   ['Email', form.adminEmail || '—'],
                   ['Access', form.inviteMethod === 'invite' ? 'Email invite' : 'Temporary password'],
                 ] },
-                { title: 'Settings', s: 6, rows: [
+                { title: 'Settings', s: 7, rows: [
                   ['Currency / TZ', `${form.currency} · ${form.timezone}`],
                   ['Date / Language', `${form.dateFormat} · ${form.language}`],
                 ] },
@@ -669,7 +794,7 @@ export function CreateTenantPage() {
             </div>
           )}
 
-          {step === 8 && (
+          {step === 9 && (
             <Card>
               <CardHeader>
                 <CardTitle>Ready to provision</CardTitle>
@@ -681,6 +806,7 @@ export function CreateTenantPage() {
                 <ul className="text-sm space-y-2 list-disc pl-5 text-foreground">
                   <li>Tenant workspace shell and limits</li>
                   <li>Feature entitlements: {form.entitlements.length} modules</li>
+                  <li>Access template: {getRolePackById(form.accessTemplatePackId).name}</li>
                   <li>Tenant Admin: {form.adminEmail || '—'}</li>
                 </ul>
                 <label className="flex items-center gap-2 text-sm">
@@ -742,7 +868,7 @@ export function CreateTenantPage() {
         </div>
         <div className="flex gap-2">
           {step < STEPS.length ? (
-            <Button type="button" onClick={goNext} disabled={step === 7 && !form.reviewAcknowledge}>
+            <Button type="button" onClick={goNext} disabled={step === 8 && !form.reviewAcknowledge}>
               Next: {STEPS[step].label}
             </Button>
           ) : (

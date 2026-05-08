@@ -12,6 +12,13 @@ import { SupportPage } from './pages/SupportPage';
 import { SettingsPage } from './pages/SettingsPage';
 import { AppLayout } from './components/layouts/AppLayout';
 import { TenantLayout } from './components/layouts/TenantLayout';
+import { AccessTemplatesOverviewPage } from './pages/super-admin/access-templates/AccessTemplatesOverviewPage';
+import { RolePacksPage } from './pages/super-admin/access-templates/RolePacksPage';
+import { RolePackDetailPage } from './pages/super-admin/access-templates/RolePackDetailPage';
+import { UserGroupTemplatesPage } from './pages/super-admin/access-templates/UserGroupTemplatesPage';
+import { PermissionCatalogPage } from './pages/super-admin/access-templates/PermissionCatalogPage';
+import { GenerateRolePackPage } from './pages/super-admin/access-templates/GenerateRolePackPage';
+import { TemplateAssignmentsPage } from './pages/super-admin/access-templates/TemplateAssignmentsPage';
 import { TenantDashboardPage } from './pages/tenant/TenantDashboardPage';
 import { OutletsPage } from './pages/tenant/OutletsPage';
 import { CreateOutletPage } from './pages/tenant/CreateOutletPage';
@@ -49,6 +56,13 @@ export const router = createBrowserRouter([
       { path: 'audit-logs', Component: AuditLogsPage },
       { path: 'support', Component: SupportPage },
       { path: 'settings', Component: SettingsPage },
+      { path: 'access-templates', Component: AccessTemplatesOverviewPage },
+      { path: 'access-templates/role-packs', Component: RolePacksPage },
+      { path: 'access-templates/role-packs/:packId', Component: RolePackDetailPage },
+      { path: 'access-templates/user-groups', Component: UserGroupTemplatesPage },
+      { path: 'access-templates/permissions', Component: PermissionCatalogPage },
+      { path: 'access-templates/generate', Component: GenerateRolePackPage },
+      { path: 'access-templates/assignments', Component: TemplateAssignmentsPage },
     ],
   },
   {

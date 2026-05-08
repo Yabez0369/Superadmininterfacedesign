@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
-import { Plus, Search, MoreVertical, Shield } from 'lucide-react';
+import { Lock, Plus, Search, MoreVertical, Shield } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { Badge } from '../../components/ui/Badge';
@@ -48,6 +48,18 @@ const staff = [
 
 export function StaffRolesPage() {
   const [searchQuery, setSearchQuery] = useState('');
+  let activePack: null | {
+    packName: string;
+    businessType: string;
+    customRolesAllowed: boolean;
+    entitlements?: string[];
+  } = null;
+  try {
+    const raw = localStorage.getItem('demo.activeRolePack');
+    activePack = raw ? JSON.parse(raw) : null;
+  } catch {
+    activePack = null;
+  }
 
   return (
     <div className="max-w-[1600px]">
@@ -71,6 +83,64 @@ export function StaffRolesPage() {
           </Link>
         </div>
       </div>
+
+      {activePack && (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+          <Card className="lg:col-span-2 relative overflow-hidden">
+            <CardHeader>
+              <CardTitle>Active Role Pack</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="rounded-2xl border border-border bg-white/60 p-4">
+                <p className="text-sm text-foreground font-medium">{activePack.packName}</p>
+                <p className="text-xs text-muted-foreground mt-1">{activePack.businessType} · Access Boundary</p>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="rounded-2xl border border-border bg-white/60 p-4">
+                  <p className="text-xs text-muted-foreground">Available roles</p>
+                  <p className="text-sm text-foreground font-medium mt-1">Tenant Admin, Outlet Manager, Cashier, Stock Keeper, Maintenance Staff</p>
+                </div>
+                <div className="rounded-2xl border border-border bg-white/60 p-4">
+                  <p className="text-xs text-muted-foreground">Custom roles</p>
+                  <div className="mt-1 flex items-center justify-between gap-3">
+                    <Badge variant={activePack.customRolesAllowed ? 'success' : 'secondary'}>
+                      {activePack.customRolesAllowed ? 'Enabled' : 'Disabled'}
+                    </Badge>
+                    {!activePack.customRolesAllowed && (
+                      <span className="inline-flex items-center gap-2 text-xs text-muted-foreground">
+                        <Lock className="h-4 w-4" />
+                        Locked by Super Admin configuration
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+              {!activePack.customRolesAllowed && (
+                <div className="rounded-2xl border border-slate-200 bg-white/60 p-4">
+                  <p className="text-sm text-foreground font-medium">Custom roles are disabled</p>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Custom roles are disabled by Super Admin configuration.
+                  </p>
+                </div>
+              )}
+            </CardContent>
+            <div className="pointer-events-none absolute -bottom-10 -right-10 h-44 w-44 rounded-full bg-gradient-to-br from-primary/20 to-cyan-500/10 blur-2xl" />
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>Permission boundary</CardTitle>
+            </CardHeader>
+            <CardContent className="text-sm text-muted-foreground space-y-2">
+              <p>
+                Rights are governed by the active role pack. Some permissions may be locked if a feature is not included in your subscription.
+              </p>
+              <p className="text-xs">
+                Demo note: the boundary is set by Super Admin during tenant provisioning.
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+      )}
 
       <div className="grid grid-cols-4 gap-6 mb-6">
         <Card>

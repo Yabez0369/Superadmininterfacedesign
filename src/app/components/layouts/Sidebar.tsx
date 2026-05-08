@@ -3,6 +3,7 @@ import {
   LayoutDashboard,
   Building2,
   CreditCard,
+  KeyRound,
   Activity,
   Headphones,
   FileText,
@@ -16,6 +17,7 @@ const platformManagement = [
   { path: '/super-admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { path: '/super-admin/tenants', label: 'Tenants', icon: Building2 },
   { path: '/super-admin/subscriptions', label: 'Subscriptions', icon: CreditCard },
+  { path: '/super-admin/access-templates', label: 'Access Templates', icon: KeyRound },
 ];
 
 const system = [
